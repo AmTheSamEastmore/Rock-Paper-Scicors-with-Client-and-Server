@@ -10,9 +10,10 @@ def log(adress, data):
         x.write(f'({adress}, "{data}")\n')
 
 class Play:
-    def __init__(self, player, choice):
+    def __init__(self, player, choice, name):
         self.player = player
         self.choice = choice
+        self.name = name
 
 class Game:
     def __init__(self):
@@ -27,21 +28,21 @@ class Game:
             if self.self[1].choice == 'Rock':
                 print('Tie')
             if self.self[1].choice == 'Paper':
-                print(f'{self.self[1].player} Won')
+                print(f'{self.self[1].name} at {self.self[1].player} Won')
             if self.self[1].choice == 'Scicors':
-                print(f'{self.self[0].player} Won')
+                print(f'{self.self[1].name} at {self.self[1].player} Won')
         elif self.self[0].choice == 'Paper':
             if self.self[1].choice == 'Rock':
-                print(f'{self.self[0].player} Won')
+                print(f'{self.self[1].name} at {self.self[1].player} Won')
             if self.self[1].choice == 'Paper':
                 print('Tie')
             if self.self[1].choice == 'Scicors':
-                print(f'{self.self[1].player} Won')
+                print(f'{self.self[1].name} at {self.self[1].player} Won')
         elif self.self[0].choice == 'Scicors':
             if self.self[1].choice == 'Rock':
-                print(f'{self.self[1].player} Won')
+                print(f'{self.self[1].name} at {self.self[1].player} Won')
             if self.self[1].choice == 'Paper':
-                print(f'{self.self[0].player} Won')
+                print(f'{self.self[1].name} at {self.self[1].player} Won')
             if self.self[1].choice == 'Scicors':
                 print('Tie')
 
@@ -58,14 +59,15 @@ with sk.socket(sk.AF_INET, sk.SOCK_STREAM)  as s:
                 if not data:
                     break
                 else:
-                    log(adr, data.decode())
-                    if data.decode() == '1':
-                        print(f'{adr} chose Rock')
-                        game.add(Play(adr, 'Rock'))
-                    elif data.decode() == '2':
-                        print(f'{adr} chose Paper')
-                        game.add(Play(adr, 'Paper'))
-                    elif data.decode() == '3':
-                        print(f'{adr} chose Scicors')
-                        game.add(Play(adr, 'Rock'))
-                con.sendall(b'Recived messages')
+                    message = eval(data.decode())
+                    log(adr, message)
+                    if message[1] == '1':
+                        print(f'{message[0]} at {adr} chose Rock')
+                        game.add(Play(adr, 'Rock', message[0]))
+                    elif message[1] == '2':
+                        print(f'{message[0]} at {adr} chose Paper')
+                        game.add(Play(adr, 'Paper', message[0]))
+                    elif message[1] == '3':
+                        print(f'{message[0]} at {adr} chose Scicors')
+                        game.add(Play(adr, 'Rock', message[0]))
+                con.sendall(f'[{adr}, {con}]'.encode())
