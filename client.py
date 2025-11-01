@@ -1,6 +1,7 @@
 import socket as sk
 from customtkinter import *
 from PIL import Image
+from threading import Thread as Thr
 
 HOST = 'localhost'
 PORT = 1914
@@ -9,8 +10,8 @@ def send(message:str):
     with sk.socket(sk.AF_INET, sk.SOCK_STREAM) as s:
         s.connect((HOST, PORT))
         s.sendall(message.encode())
-        port = eval(s.recv(1024).decode())[0]
-        host = eval(s.recv(1024).decode())[1]
+        port = eval(s.recv(1024).decode())
+        host = eval(s.recv(1024).decode())
     with sk.socket(sk.AF_INET, sk.SOCK_STREAM)  as s:
         s.bind((host, port))
         s.listen()
@@ -19,6 +20,7 @@ def send(message:str):
             with con:
                 while 1:
                     data = con.recv(1024)
+                    print(data)
                     if not data:
                         break
                     else:
@@ -32,6 +34,9 @@ class App(CTk):
         self.title('Rock, Paper, Scisors')
         self.geometry('700x450')
     def press(self, option):
+        sender = Thr(target=self.do, args=(option), daemon=True)
+        sender.start()
+    def do(self, option):
         self.nick = nick_input.get()
         if self.nick != '':
             alert.config(text=send(f'{[self.nick, option]}'))

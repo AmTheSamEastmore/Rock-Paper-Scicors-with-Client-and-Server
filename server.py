@@ -14,37 +14,60 @@ class Play:
         self.player = player
         self.choice = choice
         self.name = name
+    def send(self, state, other):
+        msg = f'You {state} against "{other}"'
+        with sk.socket(sk.AF_INET, sk.SOCK_STREAM) as s:
+            s.connect((self.player[0], self.player[1]))
+            s.sendall(msg.encode())
 
-class Game:
+class Game(list):
     def __init__(self):
-        self.self = []
+        super().__init__()
     def add(self, play:Play):
-        self.self.append(play)
-        if len(self.self) == 2:
+        self.append(play)
+        if len(self) == 2:
             self.get_winner()
-            self.self = []
+            self = []
     def get_winner(self):
-        if self.self[0].choice == 'Rock':
-            if self.self[1].choice == 'Rock':
+        if self[0].choice == 'Rock':
+            if self[1].choice == 'Rock':
                 print('Tie')
-            if self.self[1].choice == 'Paper':
-                print(f'{self.self[1].name} at {self.self[1].player} Won')
-            if self.self[1].choice == 'Scicors':
-                print(f'{self.self[1].name} at {self.self[1].player} Won')
-        elif self.self[0].choice == 'Paper':
-            if self.self[1].choice == 'Rock':
-                print(f'{self.self[1].name} at {self.self[1].player} Won')
-            if self.self[1].choice == 'Paper':
+                self[0].send('Tied', self[1])
+                self[1].send('Tied', self[0])
+            if self[1].choice == 'Paper':
+                print(f'{self[1].name} at {self[1].player} Won')
+                self[0].send('Lost', self[1])
+                self[1].send('Won', self[0])
+            if self[1].choice == 'Scicors':
+                print(f'{self[0].name} at {self[0].player} Won')
+                self[0].send('Won', self[1])
+                self[1].send('Won', self[0])
+        elif self[0].choice == 'Paper':
+            if self[1].choice == 'Rock':
+                print(f'{self[0].name} at {self[0].player} Won')
+                self[0].send('Won', self[1])
+                self[1].send('Lost', self[0])
+            if self[1].choice == 'Paper':
                 print('Tie')
-            if self.self[1].choice == 'Scicors':
-                print(f'{self.self[1].name} at {self.self[1].player} Won')
-        elif self.self[0].choice == 'Scicors':
-            if self.self[1].choice == 'Rock':
-                print(f'{self.self[1].name} at {self.self[1].player} Won')
-            if self.self[1].choice == 'Paper':
-                print(f'{self.self[1].name} at {self.self[1].player} Won')
-            if self.self[1].choice == 'Scicors':
+                self[0].send('Tied', self[1])
+                self[1].send('Tied', self[0])
+            if self[1].choice == 'Scicors':
+                print(f'{self[1].name} at {self[1].player} Won')
+                self[0].send('Lost', self[1])
+                self[1].send('Won', self[0])
+        elif self[0].choice == 'Scicors':
+            if self[1].choice == 'Rock':
+                print(f'{self[1].name} at {self[1].player} Won')
+                self[0].send('Lost', self[1])
+                self[1].send('Won', self[0])
+            if self[1].choice == 'Paper':
+                print(f'{self[0].name} at {self[0].player} Won')
+                self[0].send('Won', self[1])
+                self[1].send('Lost', self[0])
+            if self[1].choice == 'Scicors':
                 print('Tie')
+                self[0].send('Tied', self[1])
+                self[1].send('Tied', self[0])
 
 game = Game()
 
@@ -70,4 +93,4 @@ with sk.socket(sk.AF_INET, sk.SOCK_STREAM)  as s:
                     elif message[1] == '3':
                         print(f'{message[0]} at {adr} chose Scicors')
                         game.add(Play(adr, 'Rock', message[0]))
-                con.sendall(f'[{adr}, {con}]'.encode())
+                con.sendall(f'{adr}'.encode())
