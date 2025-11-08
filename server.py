@@ -77,20 +77,19 @@ with sk.socket(sk.AF_INET, sk.SOCK_STREAM)  as s:
     while 1:
         con, adr = s.accept() # conetion, adrress
         with con:
-            while 1:
-                data = con.recv(1024)
-                if not data:
-                    break
-                else:
-                    message = eval(data.decode())
-                    log(adr, message)
-                    if message[1] == '1':
-                        print(f'{message[0]} at {adr} chose Rock')
-                        game.add(Play(adr, 'Rock', message[0]))
-                    elif message[1] == '2':
-                        print(f'{message[0]} at {adr} chose Paper')
-                        game.add(Play(adr, 'Paper', message[0]))
-                    elif message[1] == '3':
-                        print(f'{message[0]} at {adr} chose Scicors')
-                        game.add(Play(adr, 'Rock', message[0]))
-                con.sendall(f'{adr}'.encode())
+            data = con.recv(1024)
+            if not data:
+                break
+            else:
+                message = eval(data.decode())
+                log(adr, message)
+                if message[1] == '1':
+                    print(f'{message[0]} at {adr} chose Rock')
+                    game.add(Play(adr, 'Rock', message[0]))
+                elif message[1] == '2':
+                    print(f'{message[0]} at {adr} chose Paper')
+                    game.add(Play(adr, 'Paper', message[0]))
+                elif message[1] == '3':
+                    print(f'{message[0]} at {adr} chose Scicors')
+                    game.add(Play(adr, 'Rock', message[0]))
+            con.sendall(f'{adr[0]}:{adr[1]}'.encode())

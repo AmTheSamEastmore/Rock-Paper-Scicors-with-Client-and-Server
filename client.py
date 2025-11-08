@@ -10,10 +10,10 @@ def send(message:str):
     with sk.socket(sk.AF_INET, sk.SOCK_STREAM) as s:
         s.connect((HOST, PORT))
         s.sendall(message.encode())
-        port = eval(s.recv(1024).decode())
-        host = eval(s.recv(1024).decode())
+        dat = s.recv(1024).decode()
+        dat = dat.split(':')
     with sk.socket(sk.AF_INET, sk.SOCK_STREAM)  as s:
-        s.bind((host, port))
+        s.bind((dat[0], int(dat[1])))
         s.listen()
         while 1:
             con, adr = s.accept() # conetion, adrress
@@ -21,10 +21,8 @@ def send(message:str):
                 while 1:
                     data = con.recv(1024)
                     print(data)
-                    if not data:
+                    if data:
                         break
-                    else:
-                        pass
 
 class App(CTk):
     def __init__(self):
