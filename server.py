@@ -32,42 +32,42 @@ class Game(list):
         if self[0].choice == 'Rock':
             if self[1].choice == 'Rock':
                 print('Tie')
-                self[0].send('Tied', self[1])
-                self[1].send('Tied', self[0])
+                self[0].send('Tied', self[1].name)
+                self[1].send('Tied', self[0].name)
             if self[1].choice == 'Paper':
                 print(f'{self[1].name} at {self[1].player} Won')
-                self[0].send('Lost', self[1])
-                self[1].send('Won', self[0])
+                self[0].send('Lost', self[1].name)
+                self[1].send('Won', self[0].name)
             if self[1].choice == 'Scicors':
                 print(f'{self[0].name} at {self[0].player} Won')
-                self[0].send('Won', self[1])
-                self[1].send('Won', self[0])
+                self[0].send('Won', self[1].name)
+                self[1].send('Won', self[0].name)
         elif self[0].choice == 'Paper':
             if self[1].choice == 'Rock':
                 print(f'{self[0].name} at {self[0].player} Won')
-                self[0].send('Won', self[1])
-                self[1].send('Lost', self[0])
+                self[0].send('Won', self[1].name)
+                self[1].send('Lost', self[0].name)
             if self[1].choice == 'Paper':
                 print('Tie')
-                self[0].send('Tied', self[1])
-                self[1].send('Tied', self[0])
+                self[0].send('Tied', self[1].name)
+                self[1].send('Tied', self[0].name)
             if self[1].choice == 'Scicors':
                 print(f'{self[1].name} at {self[1].player} Won')
-                self[0].send('Lost', self[1])
-                self[1].send('Won', self[0])
+                self[0].send('Lost', self[1].name)
+                self[1].send('Won', self[0].name)
         elif self[0].choice == 'Scicors':
             if self[1].choice == 'Rock':
                 print(f'{self[1].name} at {self[1].player} Won')
-                self[0].send('Lost', self[1])
-                self[1].send('Won', self[0])
+                self[0].send('Lost', self[1].name)
+                self[1].send('Won', self[0].name)
             if self[1].choice == 'Paper':
                 print(f'{self[0].name} at {self[0].player} Won')
-                self[0].send('Won', self[1])
-                self[1].send('Lost', self[0])
+                self[0].send('Won', self[1].name)
+                self[1].send('Lost', self[0].name)
             if self[1].choice == 'Scicors':
                 print('Tie')
-                self[0].send('Tied', self[1])
-                self[1].send('Tied', self[0])
+                self[0].send('Tied', self[1].name)
+                self[1].send('Tied', self[0].name)
 
 game = Game()
 

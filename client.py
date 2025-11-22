@@ -20,7 +20,7 @@ def send(message:str):
             with con:
                 while 1:
                     data = con.recv(1024)
-                    print(data)
+                    alert.msg(data)
                     if data:
                         break
 
@@ -63,7 +63,8 @@ scisors_img_large = CTkImage(dark_image=scisorsimg, size=(100, 100))
 scisors = CTkButton(root, height=100, width=100, image=scisors_img_large, text='', command=lambda: root.press('3'))
 scisors.place(x=450, y=130)
 
-alert = CTkLabel(root, text='', font=CTkFont('Arial', 22, 'bold'))
+alert = CTkLabel(root, text=' ', font=CTkFont('Arial', 22, 'bold'))
 alert.place(x=90, y=330)
+alert.msg = lambda txt: alert.configure(text=txt)
 
 root.mainloop()
