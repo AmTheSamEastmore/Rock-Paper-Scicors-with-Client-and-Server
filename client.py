@@ -12,10 +12,10 @@ def send(message:str):
         s.sendall(message.encode())
         dat = s.recv(1024).decode()
         dat = dat.split(':')
-    with sk.socket(sk.AF_INET, sk.SOCK_STREAM)  as s:
-        s.bind((dat[0], int(dat[1])))
-        s.listen()
-        while 1:
+    if dat != ['']:
+        with sk.socket(sk.AF_INET, sk.SOCK_STREAM)  as s:
+            s.bind((dat[0], int(dat[1])))
+            s.listen()
             con, adr = s.accept() # conetion, adrress
             with con:
                 while 1:
@@ -37,8 +37,7 @@ class App(CTk):
     def do(self, option):
         self.nick = nick_input.get()
         if self.nick != '':
-            alert.config(text=send(f'{[self.nick, option]}'))
-            self.after(10000, lambda: alert.config(text=''))
+            send(f'{[self.nick, option]}')
 
 root = App()
 
